@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MapMinder</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_string">Title :</string>
+    <string name="title_placeholder" />
+    <string name="address_string">Address :</string>
+    <string name="address_placeholder" />
+    <string name="info_string">Info :</string>
+    <string name="info_placeholder" />
+    <string name="save_button">SAVE</string>
+    <string name="delete_alert">Delete</string>
+    <string name="cancel_alert">Cancel</string>
+    <string name="modify_alert">Modify</string>
+</resources>
