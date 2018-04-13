@@ -31,8 +31,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.pow
+import kotlin.math.sqrt
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapsActivity() : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
     override fun onMarkerClick(p0: Marker?) = false
 
     private lateinit var map : GoogleMap
@@ -71,6 +73,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val fabbtn = findViewById<FloatingActionButton>(R.id.fab)
         fabbtn.setOnClickListener {
+            //TEST OF ARRAY SORTING
+            markers = sortArrayMarker(markers)
+            for (marker in markers) {
+                Log.d("MapsActivity", marker.title)
+            }
             loadPlacePicker()
         }
 
@@ -78,16 +85,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         addbtn.setOnClickListener {
             addReminder()
         }
+
+    }
+
+    override fun onMapLongClick(p0: LatLng?) {
+        if (p0 != null) {
+            placeMarkerOnMap(p0, null, null)
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.getUiSettings().setZoomControlsEnabled(true)
         map.setOnMarkerClickListener(this)
+        map.setOnMapLongClickListener(this)
 
-        /*val gumbo = LatLng(48.877, 2.369999)
-        map.addMarker(MarkerOptions().position(gumbo).title("Gumbo Yaya"))
-        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(gumbo, 15.0f))*/
         map.getUiSettings().setZoomControlsEnabled(true)
         map!!.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener {
             override fun onMarkerClick(marker: Marker): Boolean {
@@ -95,7 +107,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 return false
             }
         })
+
         setUpMap()
+        populateMap()
+
     }
 
     private fun addReminder() {
@@ -133,10 +148,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 //placeMarkerOnMap(currentLatLng)
                 //map.mapType = GoogleMap.MAP_TYPE_TERRAIN
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng,12.0f))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng,15.0f))
             }
         }
-        populateMap()
     }
 
     private fun populateMap() {
@@ -170,9 +184,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
         //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker())
-
         val marker = map.addMarker(markerOptions)
-        marker.setTag(id)
+        marker.tag = id
         markers.add(marker)
     }
 
@@ -263,11 +276,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
                     val ret: Int = DB.RemoveMarker(marker.tag as Long)
                     if (ret > 0) {
+                        markers.remove(marker)
                         marker.remove()
                     }
                 })
                 .setNeutralButton(R.string.modify_alert, { _, _ ->
-                    //activity add reminder with values filled
                     modifyReminder(marker)
                 })
                 .setNegativeButton(R.string.cancel_alert, {
@@ -275,6 +288,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 })
                 .create()
                 .show()
+    }
+
+    private fun sortArrayMarker(markers : ArrayList<Marker>) : ArrayList<Marker> {
+        markers.sortWith(Comparator { lhs, rhs ->
+            when {
+                compareDist(lhs.position, rhs.position) > 0 -> 1
+                compareDist(lhs.position, rhs.position) < 0 -> -1
+                else -> 0
+            }
+        })
+        return markers
+    }
+
+    private fun compareDist(p1: LatLng, p2: LatLng) : Double{
+        return sqrt((p1.latitude-lastLocation.latitude).pow(2) + (p1.longitude-lastLocation.longitude).pow(2)) -
+                sqrt((p2.latitude-lastLocation.latitude).pow(2) + (p2.longitude-lastLocation.longitude).pow(2))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -306,7 +335,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 //modify marker title
                 for (marker in markers) {
                     if (marker.tag as Long == data?.getStringExtra("EXTRA_TAG")?.toLong()) {
-                        marker.setTitle(data?.getStringExtra("EXTRA_TITLE"))
+                        marker.setTitle(data.getStringExtra("EXTRA_TITLE"))
                         marker.showInfoWindow()
                     }
                 }

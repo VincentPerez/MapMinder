@@ -18,10 +18,18 @@ class AddReminderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_reminder)
 
-        val editAddress = findViewById<EditText>(R.id.editAddress)
+        titleText = findViewById<EditText>(R.id.editTitle)
+        infoText = findViewById<EditText>(R.id.editInfo)
+        addressText = findViewById<EditText>(R.id.editAddress)
+
         if (intent.hasExtra("EXTRA_ADDRESS")) {
-            val address: String = intent.getStringExtra("EXTRA_ADDRESS")
-            editAddress.setText(address)
+            addressText.setText(intent.getStringExtra("EXTRA_ADDRESS"))
+        }
+        if (intent.hasExtra("EXTRA_TITLE")) {
+            titleText.setText(intent.getStringExtra("EXTRA_TITLE"))
+        }
+        if (intent.hasExtra("EXTRA_CONTENT")) {
+            infoText.setText(intent.getStringExtra("EXTRA_CONTENT"))
         }
 
         val savebtn = findViewById<Button>(R.id.buttonSave)
@@ -32,18 +40,6 @@ class AddReminderActivity : AppCompatActivity() {
                 saveReminder()
             }
         }
-
-        titleText = findViewById<EditText>(R.id.editTitle)
-        infoText = findViewById<EditText>(R.id.editInfo)
-        addressText = findViewById<EditText>(R.id.editAddress)
-
-        if (intent.hasExtra("EXTRA_TITLE")) {
-            titleText.setText(intent.getStringExtra("EXTRA_TITLE"))
-        }
-        if (intent.hasExtra("EXTRA_CONTENT")) {
-            infoText.setText(intent.getStringExtra("EXTRA_CONTENT"))
-        }
-
     }
 
     private fun saveReminder() {
@@ -58,13 +54,11 @@ class AddReminderActivity : AppCompatActivity() {
         val DB:DatabaseHandler = DatabaseHandler(this);
         val id: Long = DB.AddReminder(values)
 
-
         val data:Intent = Intent()
         data.putExtra("EXTRA_TITLE", titleText.text.toString())
         data.putExtra("EXTRA_LAT", intent.getStringExtra("EXTRA_LAT"))
         data.putExtra("EXTRA_LON", intent.getStringExtra("EXTRA_LON"))
         data.putExtra("EXTRA_TAG", id.toString())
-
         setResult(Activity.RESULT_OK, data);
         finish()
     }
@@ -76,13 +70,13 @@ class AddReminderActivity : AppCompatActivity() {
         values.put("content", infoText.text.toString())
         values.put("address", addressText.text.toString())
 
-        val DB:DatabaseHandler = DatabaseHandler(this);
-        val ret: Int = DB.UpdateMarker(values, intent.getStringExtra("EXTRA_TAG").toLong())
-
+        val DB:DatabaseHandler = DatabaseHandler(this)
+        val tag : String = intent.getStringExtra("EXTRA_TAG")
+        val ret: Int = DB.UpdateMarker(values, tag.toLong())
 
         val data:Intent = Intent()
         data.putExtra("EXTRA_TITLE", titleText.text.toString())
-        data.putExtra("EXTRA_TAG", intent.getStringExtra("EXTRA_TAG"))
+        data.putExtra("EXTRA_TAG", tag)
         setResult(Activity.RESULT_OK, data)
         finish()
     }

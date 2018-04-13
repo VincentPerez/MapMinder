@@ -25,7 +25,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="8dp"
-            android:src="@android:drawable/ic_menu_add" />
+            android:src="@drawable/ic_add_material" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -34,7 +34,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="8dp"
-            android:src="@android:drawable/ic_menu_search" />
+            android:src="@drawable/ic_search_material" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

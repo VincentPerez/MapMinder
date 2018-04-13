@@ -19,7 +19,7 @@
 
     <EditText
         android:id="@+id/editTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -48,7 +48,7 @@
 
     <EditText
         android:id="@+id/editAddress"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -59,7 +59,6 @@
         android:text="@string/address_placeholder"
         app:layout_constraintBottom_toBottomOf="@+id/textAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toEndOf="@+id/textAddress"
         app:layout_constraintTop_toTopOf="@+id/textAddress" />
 
@@ -77,7 +76,7 @@
 
     <EditText
         android:id="@+id/editInfo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -94,6 +93,7 @@
 
     <Button
         android:id="@+id/buttonSave"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -105,7 +105,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/editInfo"
+        app:layout_constraintVertical_bias="0.147" />
 
 
 </android.support.constraint.ConstraintLayout>

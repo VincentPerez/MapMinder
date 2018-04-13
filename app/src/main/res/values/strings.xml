@@ -7,7 +7,7 @@
     <string name="address_placeholder" />
     <string name="info_string">Info :</string>
     <string name="info_placeholder" />
-    <string name="save_button">SAVE</string>
+    <string name="save_button">Save</string>
     <string name="delete_alert">Delete</string>
     <string name="cancel_alert">Cancel</string>
     <string name="modify_alert">Modify</string>
